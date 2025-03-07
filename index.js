@@ -2,6 +2,7 @@ import express from "express"; // import express
 import cors from "cors"; // import cors
 import dotenv from "dotenv"; // import dotenv
 import { connectDB } from "./db/index.js"; // import connectDB function
+import errorHandler from "./middleware/errorHandler.js"; // import errorHandler middleware
 
 dotenv.config(); // load environment variables
 
@@ -15,6 +16,8 @@ const PORT = process.env.PORT || 5000; // set the port
 app.get("/", (req, res) => {
   res.send("hello world from nodejs!!!!!");
 }); //msg from nodejs
+
+app.use(errorHandler); // error handler middleware
 
 // connect to db and start server
 const startServer = async () => {
