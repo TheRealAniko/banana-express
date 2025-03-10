@@ -3,13 +3,24 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
+  "type": "module",
   "dependencies": {
-    "express": "^4.21.2"
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "joi": "^17.13.3",
+    "pg": "^8.13.3",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.37.6"
+  },
+  "devDependencies": {
+    "dotenv": "^16.4.7",
+    "nodemon": "^3.1.9"
   }
 }
