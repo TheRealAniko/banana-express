@@ -1,75 +1,23 @@
-import Product from "../models/Product.js";
+import Joi from "joi";
 
-export const getProduct = async (req, res) => {
-  try {
-    const products = await Product.findAll({ include: "" }); // set relational table e.g. "notes"
-    res.json(products);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-export const createProduct = async (req, res) => {
-  try {
-    const {
-      body: { name, description, price },
-    } = req;
-
-    if (!name || !description || !price === undefined) {
-      return res
-        .status(400)
-        .json({ error: "Some required fields are missing" });
-    }
-
-    const product = await Product.create({ name, description, price });
-    res.status(201).json(product);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-export const getProductById = async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    const product = await Product.findByPk(id, {
-      include: "", // set relational table e.g. "notes"
-    });
-    res.status(200).json(product);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-export const updateProduct = async (req, res) => {
-  try {
-    const {
-      body: { name, description, price },
-      params: { id },
-    } = req;
-    if (!name || !description || !price)
-      return res
-        .status(400)
-        .json({ error: "firstName, lastName, and email are required" });
-    const product = await Product.findByPk(id);
-    if (!product) return res.status(404).json({ error: "Product not found" });
-    await product.update(req.body);
-    res.json(product);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-export const deleteProduct = async (req, res) => {
-  try {
-    const {
-      params: { id },
-    } = req;
-    const product = await Product.findByPk(id);
-    if (!product) return res.status(404).json({ error: "Product not found" });
-    await product.destroy();
-    res.json({ message: "Product deleted" });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
+export const productSchema = Joi.object({
+  name: Joi.string().min(3).max(100).required().messages({
+    "string.empty": "Name is required",
+    "string.min": "Name should be at least 3 characters long",
+    "string.max": "Name should be at most 100 characters long",
+  }),
+  description: Joi.string().min(10).max(1000).required().messages({
+    "string.empty": "Description is required",
+    "string.min": "Description should be at least 10 characters long",
+    "string.max": "Description should be at most 1000 characters long",
+  }),
+  price: Joi.number().precision(2).positive().required().messages({
+    "number.base": "Price must be a number",
+    "number.positive": "Price must be positive",
+    "any.required": "Price is required",
+  }),
+  categoryId: Joi.number().integer().required().messages({
+    "number.base": "Category ID must be a number",
+    "any.required": "Category ID is required",
+  }),
+});
