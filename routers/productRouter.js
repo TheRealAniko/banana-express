@@ -2,7 +2,7 @@ import express from "express";
 import {
   getProducts,
   createProduct,
-  getProductByID,
+  getProductById,
   updateProduct,
   deleteProduct,
 } from "../controllers/products.js";
@@ -20,7 +20,7 @@ productRouter
 // GET /products/:id, PUT /products/:id & DELETE /products/:id
 productRouter
   .route("/:id")
-  .get(getProductByID)
+  .get(getProductById)
   .put(validate(productSchema), updateProduct)
   .delete(deleteProduct);
 
