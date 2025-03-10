@@ -1,4 +1,4 @@
-# eCommerce API
+# banana express
 
 This project is a Node.js Express API server database. We create an eCommerce API where we can list products, categories and create orders for users.
 
@@ -94,8 +94,8 @@ The following endpoints are available:
 - Set up a Node.js server using the built-in http module in package.json.
   `"type": "module",`
 
-- The pg package connect your PostgreSQL database.
-  Variable db , create new instance Pool. Poll coming from pg.
+- The sequelize package connect your PostgreSQL database.
+  Variable sequelize , create new instance Sequelize. Attributes: `dialect: "postgres"`, specify the database that we use and `logging: false,`, disable SQL logging in the console
 
   - connectDB test database connection on startup. Print `"database connected successfully."` if client is connected or `"database connection failed", err.message` if connection do not work.
 
@@ -203,13 +203,13 @@ Set the following queries in [Neon](https://console.neon.tech/).
 ## Dependencies
 
 - [Express.js](https://expressjs.com/) is a fast, minimalist web framework for Node.js that simplifies building APIs and web applications.
-- [Dotenv](https://www.npmjs.com/package/dotenv) is a Node.js package that loads environment variables from a .env file into process.env for secure configuration management.
 - [pg](https://www.npmjs.com/package/pg) is a PostgreSQL client for Node.js that enables seamless interaction with PostgreSQL databases using JavaScript.
 - [cors](https://www.npmjs.com/package/cors) (Cross-Origin Resource Sharing) is a middleware for Node.js that enables secure cross-origin requests in web applications.
-- [sequelize](https://sequelize.org)Sequelize is a Node.js ORM for SQL databases like PostgreSQL, MySQL, and SQLite. It simplifies database interactions with models, relationships, and migrations while supporting raw queries.
+- [sequelize](https://sequelize.org) Sequelize is a Node.js ORM for SQL databases like PostgreSQL, MySQL, and SQLite. It simplifies database interactions with models, relationships, and migrations while supporting raw queries.
 
 ## Dev Dependencies
 
+- [dotenv](https://www.npmjs.com/package/dotenv) is a Node.js package that loads environment variables from a .env file into process.env for secure configuration management.
 - [nodemon](https://nodemon.io/) Nodemon is a tool for Node.js that automatically restarts the server when file changes are detected, improving development efficiency.
 
 # Project Resources
