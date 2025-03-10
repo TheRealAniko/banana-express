@@ -2,7 +2,7 @@ import Product from "../models/Product.js";
 import Category from "../models/Category.js";
 
 // GET all products
-export const getProduct = async (req, res) => {
+export const getProducts = async (req, res) => {
   try {
     const products = await Product.findAll({
       include: [
