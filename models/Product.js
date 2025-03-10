@@ -3,6 +3,11 @@ import { sequelize } from "../db/index.js";
 import Category from "./Category.js";
 
 const Product = sequelize.define("Product", {
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
+  }, // this is the primary key
   name: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -19,11 +24,7 @@ const Product = sequelize.define("Product", {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
-  id: {
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
-    primaryKey: true,
-  }, // this is the primary key
+  
 });
 
 // Association
