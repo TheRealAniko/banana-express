@@ -218,6 +218,8 @@ Since one order can have multiple products. Use a join table (OrderProduct) to s
 - [pg](https://www.npmjs.com/package/pg) is a PostgreSQL client for Node.js that enables seamless interaction with PostgreSQL databases using JavaScript.
 - [cors](https://www.npmjs.com/package/cors) (Cross-Origin Resource Sharing) is a middleware for Node.js that enables secure cross-origin requests in web applications.
 - [sequelize](https://sequelize.org) Sequelize is a Node.js ORM for SQL databases like PostgreSQL, MySQL, and SQLite. It simplifies database interactions with models, relationships, and migrations while supporting raw queries.
+- [joi](https://www.npmjs.com/package/joi) is a powerful data validation library for JavaScript and Node.js that allows developers to define and enforce validation rules using a simple and intuitive schema syntax. It supports various data types, custom validation rules, and detailed error messages, making it ideal for validating API requests, form inputs, and database entries. Joi ensures data integrity and simplifies validation in applications.
+- [pg-hstore](https://github.com/scarney81/pg-hstore) is a node.js library used to serialize and deserialize JSON-like objects into PostgreSQL's hstore format. It is commonly used with Sequelize, a popular ORM, to handle hstore data types in PostgreSQL databases. The library simplifies converting JavaScript objects to hstore strings and vice versa.
 
 ## Dev Dependencies
 
