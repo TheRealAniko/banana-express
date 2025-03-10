@@ -10,7 +10,7 @@ const app = express(); // create an express app
 app.use(cors()); // middleware cors  enable CORS for all requests
 app.use(express.json()); // middleware for JSON parsing
 
-const PORT = process.env.PORT || 5000; // set the port
+const PORT = process.env.PORT || 8080; // set the port
 
 // create a route
 app.get("/", (req, res) => {
