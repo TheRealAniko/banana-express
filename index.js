@@ -5,6 +5,7 @@ import { connectDB, syncModels } from "./db/index.js"; // import connectDB funct
 import errorHandler from "./middleware/errorHandler.js"; // import errorHandler middleware
 import catRouter from "./routers/categoryRouter.js";
 import userRouter from "./routers/userRouter.js"; // import userRouter
+import productRouter from "./routers/productRouter.js";
 
 dotenv.config(); // load environment variables
 
@@ -17,13 +18,12 @@ const PORT = process.env.PORT || 8080; // set the port
 // create a route
 app.get("/", (req, res) => {
   res.send("hello world from nodejs!!!!!");
-}); 
+});
 
 app.use("/users", userRouter);
+app.use("/products", productRouter);
 
-// NOTE: Hey Banana-gang, its me again. Feel free to use the next space to add your own routers! 
-
-
+// NOTE: Hey Banana-gang, its me again. Feel free to use the next space to add your own routers!
 
 // end router section
 app.use(errorHandler); // error handler middleware
