@@ -1,12 +1,17 @@
 import Product from "../models/Product.js";
+import Category from "../models/Category.js";
 
 // GET all products
 export const getProduct = async (req, res) => {
   try {
-    const products = await Product
-      .findAll
-      // { include: "" }
-      (); // set relational table e.g. "notes"
+    const products = await Product.findAll({
+      include: [
+        {
+          model: Category,
+          attributes: ["id", "name"],
+        },
+      ],
+    });
     res.json(products);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -17,8 +22,14 @@ export const getProduct = async (req, res) => {
 export const createProduct = async (req, res) => {
   try {
     const {
-      body: { name, description, price },
+      body: { name, description, price, categoryId },
     } = req;
+
+    // Check: Does category exist?
+    const categoryExists = await Category.findByPk(categoryId);
+    if (!categoryExists) {
+      return res.status(400).json({ error: "Category does not exist" });
+    }
 
     if (!name || !description || price === undefined) {
       return res
@@ -26,7 +37,12 @@ export const createProduct = async (req, res) => {
         .json({ error: "Name, description, and price are required" });
     }
 
-    const product = await Product.create({ name, description, price });
+    const product = await Product.create({
+      name,
+      description,
+      price,
+      categoryId,
+    });
     res.status(201).json(product);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -38,12 +54,14 @@ export const getProductById = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const product = await Product.findByPk(
-      id
-      //     {
-      //   include: "", // set relational table e.g. "notes"
-      // }
-    );
+    const product = await Product.findByPk(id, {
+      include: [
+        {
+          model: Category,
+          attributes: ["id", "name"],
+        },
+      ],
+    });
 
     if (!product) return res.status(404).json({ error: "Product not found" });
 

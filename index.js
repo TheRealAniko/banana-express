@@ -13,7 +13,9 @@ app.use("/products", productRouter);
 
 const startServer = async () => {
   await connectDB();
-  await Product.sync({ alter: true });
+  await sequelize.sync({ alter: true });
+  console.log("Database synced");
+
   app.listen(port, () => {
     console.log(`Server running on port ${port}`);
   });

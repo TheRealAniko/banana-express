@@ -14,7 +14,14 @@ const Product = sequelize.define("Product", {
     type: DataTypes.DECIMAL(12, 2),
     allowNull: false,
   },
+  categoryId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
 });
+
+// Association
+Product.belongsTo(Category, { foreignKey: "categoryId" });
 
 Product.sync({
   logging: false,
