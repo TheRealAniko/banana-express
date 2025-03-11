@@ -1,7 +1,7 @@
 import Order from "../models/Order.js"; // import the Order model
 import Product from "../models/Product.js"; // import the Product model
-import User from "../models/User.js";  // import the User model
-import OrderProduct from "../models/OrderProduct.js";  // import the OrderProduct model
+import User from "../models/User.js"; // import the User model
+import OrderProduct from "../models/OrderProduct.js"; // import the OrderProduct model
 
 //  GET /orders
 export const getOrders = async (req, res) => {
@@ -40,6 +40,23 @@ export const createOrder = async (req, res) => {
     );
 
     res.status(201).json(order); // send the order as a JSON response
+  } catch (error) {
+    // send an error if it occurs
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// GET /orders/:id
+export const getOrderById = async (req, res) => {
+  try {
+    // find the order by its primary key (id) and include associated products
+    const order = await Order.findByPk(req.params.id, {
+      include: [{ model: Product, through: { attributes: ["quantity"] } }],
+    });
+    // if the order does not exist, send a 404 response
+    if (!order) return res.status(404).json({ message: "Order not found" });
+    // send the order as a JSON response
+    res.json(order);
   } catch (error) {
     // send an error if it occurs
     res.status(500).json({ error: error.message });
