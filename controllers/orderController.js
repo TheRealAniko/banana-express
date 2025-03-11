@@ -2,6 +2,7 @@ import Order from "../models/Order.js"; // import the Order model
 import Product from "../models/Product.js"; // import the Product model
 import User from "../models/User.js"; // import the User model
 import OrderProduct from "../models/OrderProduct.js"; // import the OrderProduct model
+import { sequelize } from "../db/index.js"; // import sequelize
 
 //  GET /orders
 export const getOrders = async (req, res) => {
@@ -19,32 +20,46 @@ export const getOrders = async (req, res) => {
 
 // POST /orders
 export const createOrder = async (req, res) => {
-    try {
-        const { userId, products, total } = req.body; // destructure userId, products, and total from the request body
+    const transaction = await sequelize.transaction(); // start transaction
 
-        // check if the user exists
+    try {
+        const { userId, products, total } = req.body; // destructure the userId, products, and total from the request body
+
+        // ensure the user exists before creating the order
         const userExists = await User.findByPk(userId);
         // if the user does not exist, send a 404 response
         if (!userExists) {
-            return res.status(404).json({ message: "User not found" }); // send a 404 response
+            return res.status(404).json({ message: "User not found" });
         }
 
-        const order = await Order.create({ userId, total }); // create a new order
+        // step 1: create the order first
+        const order = await Order.create({ userId, total }, { transaction });
 
-        // create a new order-product association for each product in the order
-        await OrderProduct.bulkCreate(
-            // map over the products array and return an object with orderId, productId, and quantity
-            products.map((p) => ({
-                orderId: order.id,
-                productId: p.productId,
-                quantity: p.quantity,
-            }))
-        );
+        // if the order creation fails, rollback the transaction
+        if (!order || !order.id) {
+            await transaction.rollback(); //  rollback transaction in case of error
+            return res.status(500).json({ message: "Failed to create order" }); // send an error message
+        }
 
-        res.status(201).json(order); // send the order as a JSON response
+        // step 2: insert products into OrderProduct using the correct order ID
+        const orderProducts = products.map((p) => ({
+            orderId: order.id, // ensure this uses the correct order ID
+            productId: p.productId,
+            quantity: p.quantity,
+        }));
+
+        // insert order products
+        await OrderProduct.bulkCreate(orderProducts, { transaction });
+
+        // step 3: commit transaction if everything is successful
+        await transaction.commit();
+
+        // send a success message
+        res.status(201).json({ message: "Order created successfully", order });
     } catch (error) {
-        // send an error if it occurs
-        res.status(500).json({ error: error.message });
+        await transaction.rollback(); // rollback transaction in case of error
+        console.error("Order creation errr:", error); // log the error to the console
+        res.status(500).json({ error: error.message }); // send an error if it occurs
     }
 };
 
