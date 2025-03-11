@@ -1,10 +1,10 @@
 import express from "express"; // import express
 import {
-  getOrders,
-  createOrder,
-  getOrderById,
-  updateOrder,
-  deleteOrder,
+    getOrders,
+    createOrder,
+    getOrderById,
+    updateOrder,
+    deleteOrder,
 } from "../controllers/orderController.js"; // import the getOrders controller function
 import { validateRequest } from "../middleware/validateRequest.js"; // import the validateRequest middleware
 import { orderSchema } from "../schemas/orderSchemas.js"; // import the orderSchema
