@@ -6,8 +6,8 @@ const orderSchema = Joi.object({
   products: Joi.array() // products must be an array
     .items(
       Joi.object({
-        productId: Joi.number().integer().required(),
-        quantity: Joi.number().integer().min(1).required(),
+        productId: Joi.number().integer().required(),// ensure productId exists
+        quantity: Joi.number().integer().min(1).required(), // ensure quantity is at least 1
       })
     )
     .required(), // products is required
