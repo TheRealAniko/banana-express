@@ -23,8 +23,4 @@ const Category = sequelize.define(
 
 console.log("🔍 Starte Category.sync()...");
 
-Category.sync({ alter: true })
-    .then(() => console.log("✅ Category table synced"))
-    .catch((error) => console.error("❌ Error syncing Category table:", error));
-
 export default Category;
