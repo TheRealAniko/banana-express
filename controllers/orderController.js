@@ -62,6 +62,46 @@ export const getOrderById = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+// PUT /orders/:id
+export const updateOrder = async (req, res) => {
+  try {
+    // destructure the userId, products, and total from the request body
+    const { userId, products, total } = req.body;
+    // destructure the orderId from the request parameters
+    const orderId = req.params.id;
+
+    // check if the order exists
+    const order = await Order.findByPk(orderId);
+    // if the order does not exist, send a 404 response
+    if (!order) return res.status(404).json({ message: "Order not found" });
+
+    // check if user exists
+    const userExists = await User.findByPk(userId);
+    // if the user does not exist, send a 404 response
+    if (!userExists) return res.status(404).json({ message: "User not found" });
+
+    // update order details
+    await order.update({ userId, total });
+
+    // remove existing order products
+    await OrderProduct.destroy({ where: { orderId } });
+
+    // insert updated products
+    await OrderProduct.bulkCreate(
+      products.map((p) => ({
+        orderId: order.id,
+        productId: p.productId,
+        quantity: p.quantity,
+      }))
+    );
+
+    // send a success message
+    res.status(200).json({ message: "Order updated successfully" });
+  } catch (error) {
+    // send an error if it occurs
+    res.status(500).json({ error: error.message });
+  }
+};
 
 // DELETE /orders/:id
 export const deleteOrder = async (req, res) => {
