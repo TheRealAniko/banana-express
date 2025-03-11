@@ -12,6 +12,11 @@ export const getOrders = async (req, res) => {
                 { model: Product, through: { attributes: ["quantity"] } },
             ],
         }); // fetch all orders and include associated products
+
+        // if no orders are found, send a 404 response
+        if (!orders.length) {
+          return res.status(404).json({ message: "No orders found" });
+        }
         res.json(orders); // send the orders as a JSON response
     } catch (error) {
         res.status(500).json({ error: error.message }); // send an error if it occurs
