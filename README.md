@@ -126,7 +126,17 @@ Since one order can have multiple products. Use a join table (OrderProduct) to s
 - `productId: Integer` - A order can have multiple products (productId is a foreign key).
 - `quantity: Integer` - The quantity of the products
 
-# Backend API
+# Backend API - Postman Test
+
+# Order
+
+- POST `http://localhost:8080/users`  
+  body :`{"userId": 1,"products": [{ "productId": 1, "quantity": 5 },{ "productId": 1, "quantity": 10 }],"total": 33.33}`
+- GET `http://localhost:8080/orders`
+- PUT `http://localhost:8080/orders`
+  body: `{"userId": 1,"products": [{ "productId": 1, "quantity": 5 },{ "productId": 2, "quantity": 10 }],"total": 69.97`
+- GET by ID `http://localhost:8080/orders/1`
+- DELETE by ID `http://localhost:8080/orders/1`
 
 # User Endpoints
 
