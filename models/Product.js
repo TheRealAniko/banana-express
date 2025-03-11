@@ -13,18 +13,17 @@ const Product = sequelize.define("Product", {
     allowNull: false,
   },
   description: {
-    type: DataTypes.TEXT,
+    type: DataTypes.STRING,
     allowNull: false,
   },
   price: {
-    type: DataTypes.DECIMAL(12, 2),
+    type: DataTypes.FLOAT,
     allowNull: false,
   },
   categoryId: {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
-  
 });
 
 // Association
