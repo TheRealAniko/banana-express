@@ -28,6 +28,7 @@ export const syncModels = async () => {
   try {
     // Import the User model (already defined)
     const User = (await import("../models/User.js")).default;
+    const Order = (await import("../models/Order.js")).default; // import the Order model
 
     // TODO: Hey banana-gang, you can import your models here (e.g., Product, Category, Order)
 
