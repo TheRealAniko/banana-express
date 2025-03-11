@@ -1,7 +1,7 @@
 import Order from "../models/Order.js"; // import the Order model
 import Product from "../models/Product.js"; // import the Product model
 import User from "../models/User.js"; // import the User model
-import { sequelize } from "../db/index.js"; // import sequelize
+import OrderProduct from "../models/OrderProduct.js"; // import the OrderProduct model
 
 //  GET /orders
 export const getOrders = async (req, res) => {
@@ -21,10 +21,7 @@ export const getOrders = async (req, res) => {
 };
 
 // POST /orders
-// POST /orders
 export const createOrder = async (req, res) => {
-  const transaction = await sequelize.transaction(); // start transaction
-
   try {
     const { userId, products, total } = req.body; // destructure the userId, products, and total from the request body
 
@@ -36,35 +33,28 @@ export const createOrder = async (req, res) => {
     }
 
     //  create the order first
-    const order = await Order.create({ userId, total }, { transaction });
+    const order = await Order.create({ userId, total });
 
     // if the order creation fails, rollback the transaction
     if (!order || !order.id) {
-      await transaction.rollback(); //  rollback transaction in case of error
       return res.status(500).json({ message: "Failed to create order" }); // send an error message
     }
 
     //  insert products into OrderProduct using the correct order ID
     if (products && products.length > 0) {
       const orderProducts = products.map((p) => ({
-        orderId: order.id, // Ensure this uses the correct order ID
-        productId: p.productId,
+        OrderId: order.id, // Ensure this uses the correct order ID
+        ProductId: p.productId,
         quantity: p.quantity,
       }));
 
       // insert order products
-      await OrderProduct.bulkCreate(orderProducts, { transaction });
-
-      //  transaction if everything is successful
-      await transaction.commit();
+      await OrderProduct.bulkCreate(orderProducts);
 
       // send a success message
       res.status(201).json({ message: "Order created successfully", order });
     }
-    //  commit transaction if everything is successful
-    await transaction.commit();
   } catch (error) {
-    await transaction.rollback(); // rollback transaction in case of error
     console.error("Order creation errr:", error); // log the error to the console
     res.status(500).json({ error: error.message }); // send an error if it occurs
   }
