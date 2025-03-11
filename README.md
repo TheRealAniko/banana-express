@@ -109,13 +109,22 @@ Set the following queries in [Neon](https://console.neon.tech/).
 
 ### Data Models
 
+Since a user can have multiple orders (userId is a foreign key).
+
+##### Order
+
 - `id: Integer` - A unique identifier
 - `userId: Integer` - A user can have multiple orders (userId is a foreign key).
 - `products: Array of objects containing productId (Integer) and quantity (Integer)` - Each order can have multiple products stored as an array of objects (JSONB) in PostgreSQL.
 - `total: Float` - Total price is stored as a float.
 
-Since a user can have multiple orders (userId is a foreign key).
 Since one order can have multiple products. Use a join table (OrderProduct) to store productId and quantity separately.
+
+##### OrderProduct
+
+- `orderId: Integer` - A order (orderId is a foreign key).
+- `productId: Integer` - A order can have multiple products (productId is a foreign key).
+- `quantity: Integer` - The quantity of the products
 
 # Backend API
 
