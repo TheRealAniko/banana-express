@@ -99,44 +99,7 @@ The following endpoints are available:
 
   - connectDB test database connection on startup. Print `"database connected successfully."` if client is connected or `"database connection failed", err.message` if connection do not work.
 
-## Database
-
-We use [Neon](https://console.neon.tech/) with postgresql.
-
-Set the following queries in [Neon](https://console.neon.tech/).
-
-# Order
-
-### Data Models
-
-Since a user can have multiple orders (userId is a foreign key).
-
-##### Order
-
-- `id: Integer` - A unique identifier
-- `userId: Integer` - A user can have multiple orders (userId is a foreign key).
-- `products: Array of objects containing productId (Integer) and quantity (Integer)` - Each order can have multiple products stored as an array of objects (JSONB) in PostgreSQL.
-- `total: Float` - Total price is stored as a float.
-
-Since one order can have multiple products. Use a join table (OrderProduct) to store productId and quantity separately.
-
-##### OrderProduct
-
-- `orderId: Integer` - A order (orderId is a foreign key).
-- `productId: Integer` - A order can have multiple products (productId is a foreign key).
-- `quantity: Integer` - The quantity of the products
-
-# Backend API - Postman Test
-
-# Order
-
-- POST `http://localhost:8080/users`  
-  body :`{"userId": 1,"products": [{ "productId": 1, "quantity": 5 },{ "productId": 1, "quantity": 10 }],"total": 33.33}`
-- GET `http://localhost:8080/orders`
-- PUT `http://localhost:8080/orders`
-  body: `{"userId": 1,"products": [{ "productId": 1, "quantity": 5 },{ "productId": 2, "quantity": 10 }],"total": 69.97`
-- GET by ID `http://localhost:8080/orders/1`
-- DELETE by ID `http://localhost:8080/orders/1`
+# Backend API
 
 # User Endpoints
 
@@ -230,6 +193,77 @@ Since one order can have multiple products. Use a join table (OrderProduct) to s
 ### DELETE /users/:id
 
 `	// Response{"message": "Order deleted successfully"}`
+
+# Postman Test
+
+### Order
+
+- POST `http://localhost:8080/users`  
+  body :`{"userId": 1,"products": [{ "productId": 1, "quantity": 5 },{ "productId": 1, "quantity": 10 }],"total": 33.33}`
+- GET `http://localhost:8080/orders`
+- PUT `http://localhost:8080/orders`
+  body: `{"userId": 1,"products": [{ "productId": 1, "quantity": 5 },{ "productId": 2, "quantity": 10 }],"total": 69.97`
+- GET by ID `http://localhost:8080/orders/1`
+- DELETE by ID `http://localhost:8080/orders/1`
+
+# Database
+
+We use [Neon](https://console.neon.tech/) with postgresql.
+
+Set the following queries in [Neon](https://console.neon.tech/).
+
+# Order
+
+### Data Models
+
+Since a user can have multiple orders (userId is a foreign key).
+
+##### Order
+
+- `id: Integer` - A unique identifier
+- `userId: Integer` - A user can have multiple orders (userId is a foreign key).
+- `products: Array of objects containing productId (Integer) and quantity (Integer)` - Each order can have multiple products stored as an array of objects (JSONB) in PostgreSQL.
+- `total: Float` - Total price is stored as a float.
+
+Since one order can have multiple products. Use a join table (OrderProduct) to store productId and quantity separately.
+
+##### OrderProduct
+
+- `orderId: Integer` - A order (orderId is a foreign key).
+- `productId: Integer` - A order can have multiple products (productId is a foreign key).
+- `quantity: Integer` - The quantity of the products
+
+# Neon SQL tables and SQL queries
+
+- Create orders
+  `CREATE TABLE orders (id SERIAL PRIMARY KEY,userId INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,total FLOAT NOT NULL DEFAULT 0);`
+
+- Create order_products
+  `CREATE TABLE order_products (orderId INTEGER NOT NULL REFERENCES orders(id) ON DELETE CASCADE,productId INTEGER NOT NULL REFERENCES products(id) ON DELETE CASCADE,quantity INTEGER NOT NULL CHECK (quantity > 0),PRIMARY KEY (orderId, productId));`
+
+- Insert an Order for a User
+  `INSERT INTO orders (userId, total) VALUES(1, 1499.98);`
+
+- Link Products to the Order
+  `INSERT INTO order_products (orderId, productId, quantity) VALUES(1, 1, 1),(1, 2, 1);`
+
+- Get All Orders
+  `SELECT * FROM orders;`
+
+- Get Orders with Product Details
+  `SELECT o.id AS orderId, u.name AS userName, p.name AS productName, op.quantity, p.price, o.totalFROM orders o JOIN users u ON o.userId = u.id JOIN order_products op ON o.id = op.orderId JOIN products p ON op.productId = p.id;`
+
+- Get Orders for a Specific User
+  `SELECT * FROM orders WHERE userId = 1;`
+
+- Update an Order's Total Price
+  `UPDATE orders SET total = 1799.97 WHERE id = 1;`
+
+- Update Product Quantity in an Order
+  `UPDATE order_products SET quantity = 2 WHERE orderId = 1 AND productId = 2;`
+
+- Delete an Order
+  `DELETE FROM orders WHERE id = 1;`
 
 ## Dependencies
 
