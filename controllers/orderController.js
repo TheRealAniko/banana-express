@@ -62,3 +62,21 @@ export const getOrderById = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+// DELETE /orders/:id
+export const deleteOrder = async (req, res) => {
+  try {
+    // find the order by its primary key (id)
+    const order = await Order.findByPk(req.params.id);
+    // if the order does not exist, send a 404 response
+    if (!order) return res.status(404).json({ message: "Order not found" });
+
+    // delete the order
+    await order.destroy();
+    // send a success message
+    res.json({ message: "Order deleted successfully" });
+  } catch (error) {
+    // send an error if it occurs
+    res.status(500).json({ error: error.message });
+  }
+};
