@@ -38,6 +38,8 @@ Before running this server, ensure you have the following installed:
 Environment-specific configurations are set in `.env` file. This file is not available.
 
 Create a new `.env` file, you may add the following variable the `DATABASE_URL` and `PORT` values.
+- `DATABASE_URL=URL from Neon`
+- `PORT=8080`
 
 ## Running the Server
 
@@ -47,7 +49,7 @@ To start the server, run the following command:
 npm run dev
 ```
 
-The server will start running at [http://localhost:5000](http://localhost:5000)
+The server will start running at [http://localhost:8080](http://localhost:8080)
 
 ## API Documentation
 
