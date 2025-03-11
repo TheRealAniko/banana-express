@@ -1,7 +1,6 @@
 import Order from "../models/Order.js"; // import the Order model
 import Product from "../models/Product.js"; // import the Product model
 import User from "../models/User.js"; // import the User model
-import OrderProduct from "../models/OrderProduct.js"; // import the OrderProduct model
 import { sequelize } from "../db/index.js"; // import sequelize
 
 //  GET /orders
