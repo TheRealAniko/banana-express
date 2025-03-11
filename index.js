@@ -6,7 +6,8 @@ import errorHandler from "./middleware/errorHandler.js"; // import errorHandler 
 import catRouter from "./routers/categoryRouter.js";
 import userRouter from "./routers/userRouter.js"; // import userRouter
 import productRouter from "./routers/productRouter.js";
-import orderRoutes from "./routers/orderRouter.js";  // import the orderRoutes
+import orderRouter from "./routers/orderRouter.js"; // import the orderRoutes
+import orderProductRouter from "./routers/orderProductRouter.js"; // import the orderProductRoutes
 
 dotenv.config(); // load environment variables
 
@@ -24,13 +25,13 @@ app.get("/", (req, res) => {
 app.use("/users", userRouter);
 app.use("/products", productRouter);
 app.use("/categories", catRouter);
-app.use("/orders", orderRoutes); // use the orderRoutes
+app.use("/orders", orderRouter); // use the orderRoutes
+app.use("/order-products", orderProductRouter); // use the orderProductRoutes
 
 // NOTE: Hey Banana-gang, its me again. Feel free to use the next space to add your own routers!
 
 // end router section
 app.use(errorHandler); // error handler middleware
-
 
 // connect to db and start server
 const startServer = async () => {
