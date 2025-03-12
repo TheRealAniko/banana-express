@@ -4,14 +4,16 @@ import Category from "../models/Category.js";
 // GET all products
 export const getProducts = async (req, res) => {
   try {
+    // get all products of a category
+    const { categoryId } = req.query; // Query-Parameter
+
+    const filter = categoryId ? { where: { categoryId } } : {};
+
     const products = await Product.findAll({
-      include: [
-        {
-          model: Category,
-          attributes: ["id", "name"],
-        },
-      ],
+      ...filter,
+      include: Category,
     });
+
     res.json(products);
   } catch (error) {
     res.status(500).json({ error: error.message });
