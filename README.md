@@ -204,8 +204,8 @@ The following endpoints are available:
 - POST `http://localhost:8080/users`  
   body :`{"userId": 1,"products": [{ "productId": 1, "quantity": 5 },{ "productId": 1, "quantity": 10 }],"total": 33.33}`
 - GET `http://localhost:8080/orders`
-- PUT `http://localhost:8080/orders`
-  body: `{"userId": 1,"products": [{ "productId": 1, "quantity": 5 },{ "productId": 2, "quantity": 10 }],"total": 69.97`
+- PUT `http://localhost:8080/orders/39`
+  body: `{"userId": 5,"products": [{ "productId": 2, "quantity": 1 },{ "productId": 1, "quantity": 1 }],"total": 21.21}`
 - GET by ID `http://localhost:8080/orders/1`
 - DELETE by ID `http://localhost:8080/orders/1`
 
