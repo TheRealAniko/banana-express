@@ -97,14 +97,13 @@ export const updateOrder = async (req, res) => {
     // update order details
     await order.update({ userId, total });
 
-    // remove existing order products
-    await OrderProduct.destroy({ where: { orderId } });
+    await OrderProduct.destroy({ where: { OrderId: orderId } });
 
     // insert updated products
     await OrderProduct.bulkCreate(
       products.map((p) => ({
-        orderId: order.id,
-        productId: p.productId,
+        OrderId: order.id,
+        ProductId: p.productId,
         quantity: p.quantity,
       }))
     );
