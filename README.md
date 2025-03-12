@@ -38,6 +38,7 @@ Before running this server, ensure you have the following installed:
 Environment-specific configurations are set in `.env` file. This file is not available.
 
 Create a new `.env` file, you may add the following variable the `DATABASE_URL` and `PORT` values.
+
 - `DATABASE_URL=URL from Neon`
 - `PORT=8080`
 
@@ -231,38 +232,24 @@ Since one order can have multiple products. Use a join table (OrderProduct) to s
 
 ##### OrderProduct
 
-- `orderId: Integer` - A order (orderId is a foreign key).
-- `productId: Integer` - A order can have multiple products (productId is a foreign key).
 - `quantity: Integer` - The quantity of the products
 
 # Neon SQL tables and SQL queries
 
 - Create orders
-  `CREATE TABLE orders (id SERIAL PRIMARY KEY,userId INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,total FLOAT NOT NULL DEFAULT 0);`
-
-- Create order_products
-  `CREATE TABLE order_products (orderId INTEGER NOT NULL REFERENCES orders(id) ON DELETE CASCADE,productId INTEGER NOT NULL REFERENCES products(id) ON DELETE CASCADE,quantity INTEGER NOT NULL CHECK (quantity > 0),PRIMARY KEY (orderId, productId));`
+  `CREATE TABLE orders (id SERIAL PRIMARY KEY,userId INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,productId INTEGER NOT NULL REFERENCES product(id) ON DELETE CASCADE,total FLOAT NOT NULL DEFAULT 0);`
 
 - Insert an Order for a User
   `INSERT INTO orders (userId, total) VALUES(1, 1499.98);`
 
-- Link Products to the Order
-  `INSERT INTO order_products (orderId, productId, quantity) VALUES(1, 1, 1),(1, 2, 1);`
-
 - Get All Orders
   `SELECT * FROM orders;`
-
-- Get Orders with Product Details
-  `SELECT o.id AS orderId, u.name AS userName, p.name AS productName, op.quantity, p.price, o.totalFROM orders o JOIN users u ON o.userId = u.id JOIN order_products op ON o.id = op.orderId JOIN products p ON op.productId = p.id;`
 
 - Get Orders for a Specific User
   `SELECT * FROM orders WHERE userId = 1;`
 
 - Update an Order's Total Price
   `UPDATE orders SET total = 1799.97 WHERE id = 1;`
-
-- Update Product Quantity in an Order
-  `UPDATE order_products SET quantity = 2 WHERE orderId = 1 AND productId = 2;`
 
 - Delete an Order
   `DELETE FROM orders WHERE id = 1;`
