@@ -11,7 +11,7 @@ const orderSchema = Joi.object({
             })
         )
         .required(), // products is required
-    total: Joi.number().greater(0).required(), // total must be a number greater than 0 and is required
+    total: Joi.number().optional(), // total must be a number greater than 0 and is required
 });
 
 // export the schema
