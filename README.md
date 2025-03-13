@@ -39,6 +39,9 @@ Environment-specific configurations are set in `.env` file. This file is not ava
 
 Create a new `.env` file, you may add the following variable the `DATABASE_URL` and `PORT` values.
 
+- `DATABASE_URL=URL from Neon`
+- `PORT=8080`
+
 ## Running the Server
 
 To start the server, run the following command:
@@ -47,7 +50,7 @@ To start the server, run the following command:
 npm run dev
 ```
 
-The server will start running at [http://localhost:5000](http://localhost:5000)
+The server will start running at [http://localhost:8080](http://localhost:8080)
 
 ## API Documentation
 
@@ -98,24 +101,6 @@ The following endpoints are available:
   Variable sequelize , create new instance Sequelize. Attributes: `dialect: "postgres"`, specify the database that we use and `logging: false,`, disable SQL logging in the console
 
   - connectDB test database connection on startup. Print `"database connected successfully."` if client is connected or `"database connection failed", err.message` if connection do not work.
-
-## Database
-
-We use [Neon](https://console.neon.tech/) with postgresql.
-
-Set the following queries in [Neon](https://console.neon.tech/).
-
-# Order
-
-### Data Models
-
-- `id: Integer` - A unique identifier
-- `userId: Integer` - A user can have multiple orders (userId is a foreign key).
-- `products: Array of objects containing productId (Integer) and quantity (Integer)` - Each order can have multiple products stored as an array of objects (JSONB) in PostgreSQL.
-- `total: Float` - Total price is stored as a float.
-
-Since a user can have multiple orders (userId is a foreign key).
-Since one order can have multiple products. Use a join table (OrderProduct) to store productId and quantity separately.
 
 # Backend API
 
@@ -212,12 +197,71 @@ Since one order can have multiple products. Use a join table (OrderProduct) to s
 
 `	// Response{"message": "Order deleted successfully"}`
 
+# Postman Test
+
+### Order
+
+- POST `http://localhost:8080/users`  
+  body :`{"userId": 1,"products": [{ "productId": 1, "quantity": 5 },{ "productId": 1, "quantity": 10 }],"total": 33.33}`
+- GET `http://localhost:8080/orders`
+- PUT `http://localhost:8080/orders/39`
+  body: `{"userId": 5,"products": [{ "productId": 2, "quantity": 1 },{ "productId": 1, "quantity": 1 }],"total": 21.21}`
+- GET by ID `http://localhost:8080/orders/1`
+- DELETE by ID `http://localhost:8080/orders/1`
+
+# Database
+
+We use [Neon](https://console.neon.tech/) with postgresql.
+
+Set the following queries in [Neon](https://console.neon.tech/).
+
+# Order
+
+### Data Models
+
+Since a user can have multiple orders (userId is a foreign key).
+
+##### Order
+
+- `id: Integer` - A unique identifier
+- `userId: Integer` - A user can have multiple orders (userId is a foreign key).
+- `products: Array of objects containing productId (Integer) and quantity (Integer)` - Each order can have multiple products stored as an array of objects (JSONB) in PostgreSQL.
+- `total: Float` - Total price is stored as a float.
+
+Since one order can have multiple products. Use a join table (OrderProduct) to store productId and quantity separately.
+
+##### OrderProduct
+
+- `quantity: Integer` - The quantity of the products
+
+# Neon SQL tables and SQL queries
+
+- Create orders
+  `CREATE TABLE orders (id SERIAL PRIMARY KEY,userId INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,productId INTEGER NOT NULL REFERENCES product(id) ON DELETE CASCADE,total FLOAT NOT NULL DEFAULT 0);`
+
+- Insert an Order for a User
+  `INSERT INTO orders (userId, total) VALUES(1, 1499.98);`
+
+- Get All Orders
+  `SELECT * FROM orders;`
+
+- Get Orders for a Specific User
+  `SELECT * FROM orders WHERE userId = 1;`
+
+- Update an Order's Total Price
+  `UPDATE orders SET total = 1799.97 WHERE id = 1;`
+
+- Delete an Order
+  `DELETE FROM orders WHERE id = 1;`
+
 ## Dependencies
 
 - [Express.js](https://expressjs.com/) is a fast, minimalist web framework for Node.js that simplifies building APIs and web applications.
 - [pg](https://www.npmjs.com/package/pg) is a PostgreSQL client for Node.js that enables seamless interaction with PostgreSQL databases using JavaScript.
 - [cors](https://www.npmjs.com/package/cors) (Cross-Origin Resource Sharing) is a middleware for Node.js that enables secure cross-origin requests in web applications.
 - [sequelize](https://sequelize.org) Sequelize is a Node.js ORM for SQL databases like PostgreSQL, MySQL, and SQLite. It simplifies database interactions with models, relationships, and migrations while supporting raw queries.
+- [joi](https://www.npmjs.com/package/joi) is a powerful data validation library for JavaScript and Node.js that allows developers to define and enforce validation rules using a simple and intuitive schema syntax. It supports various data types, custom validation rules, and detailed error messages, making it ideal for validating API requests, form inputs, and database entries. Joi ensures data integrity and simplifies validation in applications.
+- [pg-hstore](https://github.com/scarney81/pg-hstore) is a node.js library used to serialize and deserialize JSON-like objects into PostgreSQL's hstore format. It is commonly used with Sequelize, a popular ORM, to handle hstore data types in PostgreSQL databases. The library simplifies converting JavaScript objects to hstore strings and vice versa.
 
 ## Dev Dependencies
 

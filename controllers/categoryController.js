@@ -1,4 +1,5 @@
 import Category from "../models/Category.js";
+import { categorySchema } from "../schemas/categorySchema.js";
 
 // ✅ GET /categories
 export const getAllCategories = async (req, res) => {
@@ -10,14 +11,27 @@ export const getAllCategories = async (req, res) => {
         res.status(500).json({ message: "Server error." });
     }
 };
+// ✅ GET /categories by id
+export const getCategoryById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const category = await Category.findByPk(id);
+
+        if (!category) {
+            return res.status(404).json({ message: "Category not found" });
+        }
+
+        res.json(category);
+    } catch (error) {
+        console.error("❌ Error retrieving category:", error);
+        res.status(500).json({ message: "Server error." });
+    }
+};
 
 // ✅ POST /categories
 export const createCategory = async (req, res) => {
     try {
-        const { name } = req.body;
-        if (!name) return res.status(400).json({ message: "Name is required" });
-
-        const newCategory = await Category.create({ name });
+        const newCategory = await Category.create(req.body);
         res.status(201).json(newCategory);
     } catch (error) {
         console.error("❌ Error creating category:", error);
